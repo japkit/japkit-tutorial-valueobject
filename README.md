@@ -1,2 +1,2 @@
-# japkit-tutorial
+# japkit-tutorial-valueobject
 Step by step tutorial to create a code template for value objects
