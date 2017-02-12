@@ -1,6 +1,6 @@
 package de.japkit.tutorial.valueobject;
 
-//@ValueObject
+@ValueObject
 public interface IPerson {
 	/** Returns this person's full (English) name. */
 	String getName();
