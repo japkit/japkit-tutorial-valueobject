@@ -9,6 +9,6 @@ public interface IPerson {
 	int getAge();
 
 	/** Builder of {@link IPerson} instances. */
-	//class Builder extends Person.Builder {
-	//}
+	public class Builder extends Person.Builder {
+	}
 }
