@@ -19,6 +19,10 @@ public class ValueObjectTemplate implements SrcInterface {
 	
 	@InnerClass
 	static class Builder {
+		@Field(src = "#{src.properties}",
+				getter = @Getter,
+				setter = @Setter(chain=true))
+		private SrcType $name$;
 		
 	}
 }
