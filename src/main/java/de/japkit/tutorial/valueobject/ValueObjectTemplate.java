@@ -5,6 +5,7 @@ import javax.lang.model.element.Modifier;
 import de.japkit.functions.SrcInterface;
 import de.japkit.functions.SrcType;
 import de.japkit.metaannotations.Clazz;
+import de.japkit.metaannotations.Constructor;
 import de.japkit.metaannotations.Field;
 import de.japkit.metaannotations.Getter;
 import de.japkit.metaannotations.InnerClass;
@@ -24,12 +25,24 @@ public class ValueObjectTemplate implements SrcInterface {
 	class ValueObjectClass {
 	}
 
+	@Var(fun = SrcType.class)
+	class ValueObjectInterface {
+	}
+
 	@InnerClass
 	static class Builder {
 		@Field(src = "#{src.properties}",
 				getter = @Getter,
 				setter = @Setter(chain=true))
 		private SrcType $name$;
+
+		@Constructor
+		public Builder() {
+		}
+
+		@Constructor(bodyIterator = "#{properties}", bodyCode = "#{setterName}(vo.#{getterName}());", bodyLinebreak = true)
+		public Builder(ValueObjectInterface vo) {
+		}
 
 		@Method(
 				bodyIterator = "#{properties}",
