@@ -14,6 +14,7 @@ import de.japkit.metaannotations.InnerClass;
 import de.japkit.metaannotations.Method;
 import de.japkit.metaannotations.Setter;
 import de.japkit.metaannotations.Switch;
+import de.japkit.metaannotations.Template;
 import de.japkit.metaannotations.Var;
 import de.japkit.metaannotations.classselectors.GeneratedClass;
 import de.japkit.tutorial.valueobject.DomainLibrary.isDate;
@@ -22,61 +23,68 @@ import de.japkit.tutorial.valueobject.DomainLibrary.isSet;
 
 @Clazz(namePrefixToRemove="I", nameSuffixToAppend="")
 public class ValueObjectTemplate implements SrcInterface {
-	@Field(src = "#{src.properties}")
-	private SrcType $name$;
-	
-	@Method(src = "#{src.properties}", bodyCode = "return #{getterRhs()};")
-	public SrcType $getterName$() {
-		return null;
-	}
-	
-	@Method(src = "#{src.properties}", bodyCode = "this.#{name} = #{setterRhs()};")
-	private void $setterName$(SrcType $name$) {
 
-	}
+	@Template(src = "#{properties}")
+	private class Properties {
+		@Field
+		private SrcType $name$;
 
-	@Switch
-	class getterRhs {
-		// Date is mutable. Create a defensive copy.
-		@isDate
-		@CodeFragment(imports = ValueObjectUtils.class, code = "ValueObjectUtils.copyDate(#{name})")
-		String copyDate;
+		@Method(bodyCode = "return #{getterRhs()};")
+		public SrcType $getterName$() {
+			return null;
+		}
 
-		// Persistent collections in Hibernate are mutable. Make them unmodifiable. 
-		// Do not copy them, since we do not want to trigger lazy loading here.
-		@isList
-		@CodeFragment(imports = Collections.class, code = "Collections.unmodifiableList(#{name})")
-		String copyList;
+		@Method(bodyCode = "this.#{name} = #{setterRhs()};")
+		private void $setterName$(SrcType $name$) {
+		}
 
-		// Persistent collections in Hibernate are mutable. Make them unmodifiable. 
-		// Do not copy them, since we do not want to trigger lazy loading here.
-		@isSet
-		@CodeFragment(imports = Collections.class, code = "Collections.unmodifiableSet(#{name})")
-		String copySet;
+		@Switch
+		class getterRhs {
+			// Date is mutable. Create a defensive copy.
+			@isDate
+			@CodeFragment(imports = ValueObjectUtils.class, code = "ValueObjectUtils.copyDate(#{name})")
+			String copyDate;
 
-		@DefaultCase
-		@CodeFragment(code = "#{name}")
-		String deflt;
-	}
-	
-	@Switch
-	class setterRhs {
-		@isDate
-		@CodeFragment(imports = ValueObjectUtils.class, code = "ValueObjectUtils.copyDate(#{name})")
-		String copyDate;
+			// Persistent collections in Hibernate are mutable. Make them
+			// unmodifiable.
+			// Do not copy them, since we do not want to trigger lazy loading
+			// here.
+			@isList
+			@CodeFragment(imports = Collections.class, code = "Collections.unmodifiableList(#{name})")
+			String copyList;
 
-		@isList
-		@CodeFragment(imports = ValueObjectUtils.class, code = "ValueObjectUtils.immutableCopyList(#{name})")
-		String copyList;
+			// Persistent collections in Hibernate are mutable. Make them
+			// unmodifiable.
+			// Do not copy them, since we do not want to trigger lazy loading
+			// here.
+			@isSet
+			@CodeFragment(imports = Collections.class, code = "Collections.unmodifiableSet(#{name})")
+			String copySet;
 
-		@isSet
-		@CodeFragment(imports = ValueObjectUtils.class, code = "ValueObjectUtils.immutableCopySet(#{name})")
-		String copySet;
+			@DefaultCase
+			@CodeFragment(code = "#{name}")
+			String deflt;
+		}
 
-		@DefaultCase
-		@CodeFragment(code = "#{name}")
-		String deflt;
+		@Switch
+		class setterRhs {
+			@isDate
+			@CodeFragment(imports = ValueObjectUtils.class, code = "ValueObjectUtils.copyDate(#{name})")
+			String copyDate;
 
+			@isList
+			@CodeFragment(imports = ValueObjectUtils.class, code = "ValueObjectUtils.immutableCopyList(#{name})")
+			String copyList;
+
+			@isSet
+			@CodeFragment(imports = ValueObjectUtils.class, code = "ValueObjectUtils.immutableCopySet(#{name})")
+			String copySet;
+
+			@DefaultCase
+			@CodeFragment(code = "#{name}")
+			String deflt;
+
+		}
 	}
 
 	@Var(fun = GeneratedClass.class)
