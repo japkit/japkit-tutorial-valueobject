@@ -2,8 +2,6 @@ package de.japkit.tutorial.valueobject;
 
 import java.util.Collections;
 
-import javax.lang.model.element.Modifier;
-
 import de.japkit.functions.SrcInterface;
 import de.japkit.functions.SrcType;
 import de.japkit.metaannotations.Clazz;
@@ -24,13 +22,17 @@ import de.japkit.tutorial.valueobject.DomainLibrary.isSet;
 
 @Clazz(namePrefixToRemove="I", nameSuffixToAppend="")
 public class ValueObjectTemplate implements SrcInterface {
-	@Field(src = "#{src.properties}",
-			setter = @Setter(modifiers=Modifier.PRIVATE))
+	@Field(src = "#{src.properties}")
 	private SrcType $name$;
 	
 	@Method(src = "#{src.properties}", bodyCode = "return #{getterRhs()};")
 	public SrcType $getterName$() {
 		return null;
+	}
+	
+	@Method(src = "#{src.properties}", bodyCode = "this.#{name} = #{setterRhs()};")
+	private void $setterName$(SrcType $name$) {
+
 	}
 
 	@Switch
@@ -55,6 +57,26 @@ public class ValueObjectTemplate implements SrcInterface {
 		@DefaultCase
 		@CodeFragment(code = "#{name}")
 		String deflt;
+	}
+	
+	@Switch
+	class setterRhs {
+		@isDate
+		@CodeFragment(imports = ValueObjectUtils.class, code = "ValueObjectUtils.copyDate(#{name})")
+		String copyDate;
+
+		@isList
+		@CodeFragment(imports = ValueObjectUtils.class, code = "ValueObjectUtils.immutableCopyList(#{name})")
+		String copyList;
+
+		@isSet
+		@CodeFragment(imports = ValueObjectUtils.class, code = "ValueObjectUtils.immutableCopySet(#{name})")
+		String copySet;
+
+		@DefaultCase
+		@CodeFragment(code = "#{name}")
+		String deflt;
+
 	}
 
 	@Var(fun = GeneratedClass.class)
