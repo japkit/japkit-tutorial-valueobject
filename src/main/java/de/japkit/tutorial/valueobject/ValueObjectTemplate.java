@@ -127,6 +127,19 @@ public class ValueObjectTemplate implements SrcInterface {
 		return 0;
 	}
 	
+	/**
+	 * @japkit.bodyBeforeIteratorCode return "#{valueObjectInterface.simpleName} {"+
+	 * @japkit.bodyCode "#{name}=" + #{name} +
+	 * @japkit.bodySeparator ", " +
+	 * @japkit.bodyAfterIteratorCode "}";
+	 */
+	@Method(bodyIterator = "#{properties}",
+			bodyIndentAfterLinebreak = true)
+	@Override
+	public String toString() {
+		return "";
+	}
+	
 
 	@Var(fun = GeneratedClass.class)
 	class ValueObjectClass {
