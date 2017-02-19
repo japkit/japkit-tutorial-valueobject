@@ -3,6 +3,8 @@ package de.japkit.tutorial.valueobject;
 import java.util.Collections;
 import java.util.Objects;
 
+import javax.persistence.Embeddable;
+
 import de.japkit.annotations.RuntimeMetadata;
 import de.japkit.functions.SrcInterface;
 import de.japkit.functions.SrcType;
@@ -25,6 +27,7 @@ import de.japkit.tutorial.valueobject.DomainLibrary.isSet;
 
 @Clazz(namePrefixToRemove="I", nameSuffixToAppend="")
 @RuntimeMetadata
+@Embeddable
 public class ValueObjectTemplate implements SrcInterface {
 
 	@Template(src = "#{properties}")
