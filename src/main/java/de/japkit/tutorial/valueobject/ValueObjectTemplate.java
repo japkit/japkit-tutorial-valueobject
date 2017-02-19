@@ -1,25 +1,61 @@
 package de.japkit.tutorial.valueobject;
 
+import java.util.Collections;
+
 import javax.lang.model.element.Modifier;
 
 import de.japkit.functions.SrcInterface;
 import de.japkit.functions.SrcType;
 import de.japkit.metaannotations.Clazz;
+import de.japkit.metaannotations.CodeFragment;
 import de.japkit.metaannotations.Constructor;
+import de.japkit.metaannotations.DefaultCase;
 import de.japkit.metaannotations.Field;
 import de.japkit.metaannotations.Getter;
 import de.japkit.metaannotations.InnerClass;
 import de.japkit.metaannotations.Method;
 import de.japkit.metaannotations.Setter;
+import de.japkit.metaannotations.Switch;
 import de.japkit.metaannotations.Var;
 import de.japkit.metaannotations.classselectors.GeneratedClass;
+import de.japkit.tutorial.valueobject.DomainLibrary.isDate;
+import de.japkit.tutorial.valueobject.DomainLibrary.isList;
+import de.japkit.tutorial.valueobject.DomainLibrary.isSet;
 
 @Clazz(namePrefixToRemove="I", nameSuffixToAppend="")
 public class ValueObjectTemplate implements SrcInterface {
 	@Field(src = "#{src.properties}",
-			getter = @Getter,
 			setter = @Setter(modifiers=Modifier.PRIVATE))
 	private SrcType $name$;
+	
+	@Method(src = "#{src.properties}", bodyCode = "return #{getterRhs()};")
+	public SrcType $getterName$() {
+		return null;
+	}
+
+	@Switch
+	class getterRhs {
+		// Date is mutable. Create a defensive copy.
+		@isDate
+		@CodeFragment(imports = ValueObjectUtils.class, code = "ValueObjectUtils.copyDate(#{name})")
+		String copyDate;
+
+		// Persistent collections in Hibernate are mutable. Make them unmodifiable. 
+		// Do not copy them, since we do not want to trigger lazy loading here.
+		@isList
+		@CodeFragment(imports = Collections.class, code = "Collections.unmodifiableList(#{name})")
+		String copyList;
+
+		// Persistent collections in Hibernate are mutable. Make them unmodifiable. 
+		// Do not copy them, since we do not want to trigger lazy loading here.
+		@isSet
+		@CodeFragment(imports = Collections.class, code = "Collections.unmodifiableSet(#{name})")
+		String copySet;
+
+		@DefaultCase
+		@CodeFragment(code = "#{name}")
+		String deflt;
+	}
 
 	@Var(fun = GeneratedClass.class)
 	class ValueObjectClass {
