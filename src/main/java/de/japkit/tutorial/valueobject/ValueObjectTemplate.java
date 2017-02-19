@@ -1,7 +1,9 @@
 package de.japkit.tutorial.valueobject;
 
 import java.util.Collections;
+import java.util.Objects;
 
+import de.japkit.annotations.RuntimeMetadata;
 import de.japkit.functions.SrcInterface;
 import de.japkit.functions.SrcType;
 import de.japkit.metaannotations.Clazz;
@@ -22,6 +24,7 @@ import de.japkit.tutorial.valueobject.DomainLibrary.isList;
 import de.japkit.tutorial.valueobject.DomainLibrary.isSet;
 
 @Clazz(namePrefixToRemove="I", nameSuffixToAppend="")
+@RuntimeMetadata
 public class ValueObjectTemplate implements SrcInterface {
 
 	@Template(src = "#{properties}")
@@ -86,6 +89,44 @@ public class ValueObjectTemplate implements SrcInterface {
 
 		}
 	}
+	
+	/**
+	 * <ul>
+	 * <li>japkit.bodyBeforeIteratorCode
+	 * 
+	 * <pre>
+	 * if (!(obj instanceof #{valueObjectClass.code})) {
+	 * 	return false;
+	 * }
+	 * #{valueObjectClass.code} other = (#{valueObjectClass.code}) obj;
+	 * return
+	 * </pre>
+	 *  
+	 * <li>japkit.bodyCode Objects.equals(#{name}, other.#{name})
+	 * <li>japkit.bodyAfterIteratorCode ;
+	 * </ul>
+	 */
+	@Method(imports = Objects.class,
+			bodyIterator = "#{properties}",
+			bodySeparator = " && ",
+			bodyIndentAfterLinebreak = true)
+	@Override
+	public boolean equals(Object obj) {
+		return true;
+	}
+
+	@Method(imports = Objects.class,
+			bodyIterator = "#{properties}",
+			bodyBeforeIteratorCode = "return Objects.hash(",
+			bodyCode = "#{name}",
+			bodySeparator = ", ",
+			bodyLinebreak = false,
+			bodyAfterIteratorCode = ");")
+	@Override
+	public int hashCode() {
+		return 0;
+	}
+	
 
 	@Var(fun = GeneratedClass.class)
 	class ValueObjectClass {
