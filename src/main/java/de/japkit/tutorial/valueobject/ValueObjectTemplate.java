@@ -3,14 +3,18 @@ package de.japkit.tutorial.valueobject;
 import java.util.Collections;
 import java.util.Objects;
 
+import javax.persistence.EnumType;
 import javax.persistence.Id;
+import javax.persistence.TemporalType;
 
 import de.japkit.annotations.RuntimeMetadata;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.ElementCollection_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Embeddable_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Embedded_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Entity_;
+import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Enumerated_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.OrderColumn_;
+import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Temporal_;
 import de.japkit.functions.SrcInterface;
 import de.japkit.functions.SrcType;
 import de.japkit.metaannotations.Clazz;
@@ -28,6 +32,7 @@ import de.japkit.metaannotations.Var;
 import de.japkit.metaannotations.classselectors.GeneratedClass;
 import de.japkit.tutorial.valueobject.DomainLibrary.isDate;
 import de.japkit.tutorial.valueobject.DomainLibrary.isEmbeddable;
+import de.japkit.tutorial.valueobject.DomainLibrary.isEnum;
 import de.japkit.tutorial.valueobject.DomainLibrary.isJpaBasicOrEmbeddable;
 import de.japkit.tutorial.valueobject.DomainLibrary.isList;
 import de.japkit.tutorial.valueobject.DomainLibrary.isMultiValued;
@@ -50,6 +55,8 @@ public class ValueObjectTemplate implements SrcInterface {
 		@Embedded_(_condFun = { isEmbeddable.class, isSingleValued.class })
 		@ElementCollection_(_condFun = { isJpaBasicOrEmbeddable.class, isMultiValued.class })
 		@OrderColumn_(_condFun = isList.class)
+		@Temporal_(_condFun = isDate.class, value = TemporalType.TIMESTAMP)
+		@Enumerated_(_condFun = isEnum.class, value = EnumType.STRING)
 		private SrcType $name$;
 
 		@Method(bodyCode = "return #{getterRhs()};")
