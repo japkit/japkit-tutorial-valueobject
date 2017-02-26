@@ -4,5 +4,5 @@ package de.japkit.tutorial.valueobject;
 public interface IAddress {
 	String getStreet();
 
-	String getCity();
+	City getCity();
 }

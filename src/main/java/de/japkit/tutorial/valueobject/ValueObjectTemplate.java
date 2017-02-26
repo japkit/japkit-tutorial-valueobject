@@ -14,6 +14,8 @@ import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Embeddable_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Embedded_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Entity_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Enumerated_;
+import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.ManyToMany_;
+import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.ManyToOne_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.OneToMany_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.OneToOne_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.OrderColumn_;
@@ -35,6 +37,7 @@ import de.japkit.metaannotations.Var;
 import de.japkit.metaannotations.classselectors.GeneratedClass;
 import de.japkit.tutorial.valueobject.DomainLibrary.isDate;
 import de.japkit.tutorial.valueobject.DomainLibrary.isEmbeddable;
+import de.japkit.tutorial.valueobject.DomainLibrary.isEntity;
 import de.japkit.tutorial.valueobject.DomainLibrary.isEnum;
 import de.japkit.tutorial.valueobject.DomainLibrary.isJpaBasicOrEmbeddable;
 import de.japkit.tutorial.valueobject.DomainLibrary.isList;
@@ -63,6 +66,8 @@ public class ValueObjectTemplate implements SrcInterface {
 		@Enumerated_(_condFun = isEnum.class, value = EnumType.STRING)
 		@OneToOne_(_condFun = { isValueObjectAsJpaEntity.class, isSingleValued.class }, cascade = CascadeType.ALL)
 		@OneToMany_(_condFun = { isValueObjectAsJpaEntity.class, isMultiValued.class }, cascade = CascadeType.ALL, orphanRemoval = true)
+		@ManyToOne_(_condFun = { isEntity.class, isSingleValued.class })
+		@ManyToMany_(_condFun = { isEntity.class, isMultiValued.class })
 		private SrcType $name$;
 
 		@Method(bodyCode = "return #{getterRhs()};")
