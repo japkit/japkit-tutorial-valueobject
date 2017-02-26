@@ -17,6 +17,9 @@ public interface IPerson {
 	/** Returns this person's telephone numbers. */
 	List<String> getTelephoneNumbers();
 	
+	/** Returns this person's address. */
+	Address getAddress();
+	
 	/** Builder of {@link IPerson} instances. */
 	public class Builder extends Person.Builder {
 	}

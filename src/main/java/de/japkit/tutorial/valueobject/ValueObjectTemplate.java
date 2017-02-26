@@ -6,8 +6,11 @@ import java.util.Objects;
 import javax.persistence.Id;
 
 import de.japkit.annotations.RuntimeMetadata;
+import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.ElementCollection_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Embeddable_;
+import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Embedded_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Entity_;
+import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.OrderColumn_;
 import de.japkit.functions.SrcInterface;
 import de.japkit.functions.SrcType;
 import de.japkit.metaannotations.Clazz;
@@ -24,8 +27,12 @@ import de.japkit.metaannotations.Template;
 import de.japkit.metaannotations.Var;
 import de.japkit.metaannotations.classselectors.GeneratedClass;
 import de.japkit.tutorial.valueobject.DomainLibrary.isDate;
+import de.japkit.tutorial.valueobject.DomainLibrary.isEmbeddable;
+import de.japkit.tutorial.valueobject.DomainLibrary.isJpaBasicOrEmbeddable;
 import de.japkit.tutorial.valueobject.DomainLibrary.isList;
+import de.japkit.tutorial.valueobject.DomainLibrary.isMultiValued;
 import de.japkit.tutorial.valueobject.DomainLibrary.isSet;
+import de.japkit.tutorial.valueobject.DomainLibrary.isSingleValued;
 
 @Clazz(namePrefixToRemove="I", nameSuffixToAppend="")
 @RuntimeMetadata
@@ -40,6 +47,9 @@ public class ValueObjectTemplate implements SrcInterface {
 	@Template(src = "#{properties}")
 	private class Properties {
 		@Field
+		@Embedded_(_condFun = { isEmbeddable.class, isSingleValued.class })
+		@ElementCollection_(_condFun = { isJpaBasicOrEmbeddable.class, isMultiValued.class })
+		@OrderColumn_(_condFun = isList.class)
 		private SrcType $name$;
 
 		@Method(bodyCode = "return #{getterRhs()};")
