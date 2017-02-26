@@ -3,7 +3,7 @@ package de.japkit.tutorial.valueobject;
 import java.util.Date;
 import java.util.List;
 
-@ValueObject
+@ValueObject(asJpaEntity = true)
 public interface IPerson {
 	/** Returns this person's full (English) name. */
 	String getName();

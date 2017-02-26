@@ -3,9 +3,11 @@ package de.japkit.tutorial.valueobject;
 import java.util.Collections;
 import java.util.Objects;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Id;
 
 import de.japkit.annotations.RuntimeMetadata;
+import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Embeddable_;
+import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Entity_;
 import de.japkit.functions.SrcInterface;
 import de.japkit.functions.SrcType;
 import de.japkit.metaannotations.Clazz;
@@ -27,8 +29,13 @@ import de.japkit.tutorial.valueobject.DomainLibrary.isSet;
 
 @Clazz(namePrefixToRemove="I", nameSuffixToAppend="")
 @RuntimeMetadata
-@Embeddable
+@Embeddable_(_cond = "#{!asJpaEntity}")
+@Entity_(_cond = "#{asJpaEntity}")
 public class ValueObjectTemplate implements SrcInterface {
+	
+	@Field(cond = "#{asJpaEntity}")
+	@Id
+	private Long id;
 
 	@Template(src = "#{properties}")
 	private class Properties {
