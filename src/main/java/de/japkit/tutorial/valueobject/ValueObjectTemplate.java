@@ -3,6 +3,7 @@ package de.japkit.tutorial.valueobject;
 import java.util.Collections;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.EnumType;
 import javax.persistence.Id;
 import javax.persistence.TemporalType;
@@ -13,6 +14,8 @@ import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Embeddable_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Embedded_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Entity_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Enumerated_;
+import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.OneToMany_;
+import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.OneToOne_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.OrderColumn_;
 import de.japkit.annotationtemplates.JpaAnnotationTemplatesGen.Temporal_;
 import de.japkit.functions.SrcInterface;
@@ -38,8 +41,9 @@ import de.japkit.tutorial.valueobject.DomainLibrary.isList;
 import de.japkit.tutorial.valueobject.DomainLibrary.isMultiValued;
 import de.japkit.tutorial.valueobject.DomainLibrary.isSet;
 import de.japkit.tutorial.valueobject.DomainLibrary.isSingleValued;
+import de.japkit.tutorial.valueobject.DomainLibrary.isValueObjectAsJpaEntity;
 
-@Clazz(namePrefixToRemove="I", nameSuffixToAppend="")
+@Clazz(namePrefixToRemove="I", nameSuffixToAppend="", libraries = DomainLibrary.class)
 @RuntimeMetadata
 @Embeddable_(_cond = "#{!asJpaEntity}")
 @Entity_(_cond = "#{asJpaEntity}")
@@ -57,6 +61,8 @@ public class ValueObjectTemplate implements SrcInterface {
 		@OrderColumn_(_condFun = isList.class)
 		@Temporal_(_condFun = isDate.class, value = TemporalType.TIMESTAMP)
 		@Enumerated_(_condFun = isEnum.class, value = EnumType.STRING)
+		@OneToOne_(_condFun = { isValueObjectAsJpaEntity.class, isSingleValued.class }, cascade = CascadeType.ALL)
+		@OneToMany_(_condFun = { isValueObjectAsJpaEntity.class, isMultiValued.class }, cascade = CascadeType.ALL, orphanRemoval = true)
 		private SrcType $name$;
 
 		@Method(bodyCode = "return #{getterRhs()};")
